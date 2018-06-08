@@ -40,7 +40,7 @@ void UNetAvatar::TickComponent( float DeltaTime, ELevelTick TickType, FActorComp
 		LastUpdateTime = CurrentTime;
 	}
 
-	if ((CurrentTime - LastUpdateTime) > 20) {
+	if ((CurrentTime - LastUpdateTime) > 20 && NetClient!=nullptr) {
 		AController* Controller = Cast<AController>(GetOwner());
 		if (IsValid(Controller)) {
 			APawn* Pawn = Controller->GetPawn();
