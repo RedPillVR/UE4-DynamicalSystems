@@ -39,8 +39,8 @@ void UNetAvatar::TickComponent( float DeltaTime, ELevelTick TickType, FActorComp
 	if (!IsNetProxy && IsValid(NetClient)) {
 		LastUpdateTime = CurrentTime;
 	}
-
-	if ((CurrentTime - LastUpdateTime) > 20) {
+	//This, is very dangerous. It has the possibility to flip a user's VR camera.  
+	if ((CurrentTime - LastUpdateTime) > 20 && IsValid(NetClient)) {
 		AController* Controller = Cast<AController>(GetOwner());
 		if (IsValid(Controller)) {
 			APawn* Pawn = Controller->GetPawn();
