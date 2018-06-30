@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DeveloperSettings.h"
+#include "Engine/DataTable.h"
 #include "DynamicalSystemsSettings.generated.h"
 
 USTRUCT(BlueprintType)
@@ -27,6 +28,7 @@ class DYNAMICALSYSTEMS_API UDynamicalSystemsSettings : public UDeveloperSettings
 public:
 	UDynamicalSystemsSettings() {
 		this->CurrentSettings = this->GetEnvSetting();
+		this->_AvatarTable = nullptr;
 	}
 	~UDynamicalSystemsSettings() {}
 private:
@@ -59,6 +61,29 @@ public:
 
 	UPROPERTY(config, EditAnywhere, Category = Dynamical)
 		float PingTimeout = 1.0f;
+
+	UPROPERTY(config, EditAnywhere, Category = "Dynamical|Avatar")
+	FSoftObjectPath DefaultAvatarTable;
+	UPROPERTY(config, EditAnywhere, Category = "Dynamical|Avatar")
+	FSoftObjectPath NewIKAvatarTable;
+protected:
+	UDataTable* _AvatarTable;
+public:
+	UFUNCTION(BlueprintCallable, Category = "Dynamical|Avatar")
+		static UDataTable* GetAvatarTable() {
+		if (Get()->_AvatarTable) return Get()->_AvatarTable;
+		FName Path;
+		if (Get()->UseNewIK) {
+			Path = FName(*Get()->NewIKAvatarTable.ToString());
+		}
+		else {
+			Path = FName(*Get()->DefaultAvatarTable.ToString());
+		}
+		Get()->_AvatarTable = LoadObjFromPath<UDataTable>(Path);
+		return Get()->_AvatarTable;
+	}
+	UPROPERTY(config, EditAnywhere, Category = "Dynamical|Avatar")
+	bool UseNewIK=false;
 #if WITH_EDITOR
 	void PostEditChangeProperty(struct FPropertyChangedEvent& e)
 	{
@@ -70,5 +95,13 @@ public:
 		Super::PostEditChangeProperty(e);
 	}
 #endif
+	template <typename ObjClass>
+	static FORCEINLINE ObjClass* LoadObjFromPath(const FName& Path)
+	{
+		if (Path == NAME_None) return NULL;
+		//~
+
+		return Cast<ObjClass>(StaticLoadObject(ObjClass::StaticClass(), NULL, *Path.ToString()));
+	}
 };
 	
