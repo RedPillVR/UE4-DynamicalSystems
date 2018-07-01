@@ -28,7 +28,7 @@ class DYNAMICALSYSTEMS_API UDynamicalSystemsSettings : public UDeveloperSettings
 public:
 	UDynamicalSystemsSettings() {
 		this->CurrentSettings = this->GetEnvSetting();
-		this->_AvatarTable = nullptr;
+		//this->_AvatarTable = nullptr;
 	}
 	~UDynamicalSystemsSettings() {}
 private:
@@ -66,12 +66,12 @@ public:
 	FSoftObjectPath DefaultAvatarTable;
 	UPROPERTY(config, EditAnywhere, Category = "Dynamical|Avatar")
 	FSoftObjectPath NewIKAvatarTable;
-protected:
-	UDataTable* _AvatarTable;
+//private:
+//	static UDataTable* _AvatarTable;
 public:
 	UFUNCTION(BlueprintCallable, Category = "Dynamical|Avatar")
 		static UDataTable* GetAvatarTable() {
-		if (Get()->_AvatarTable) return Get()->_AvatarTable;
+		//if (_AvatarTable!=nullptr) return _AvatarTable;
 		FName Path;
 		if (Get()->UseNewIK) {
 			Path = FName(*Get()->NewIKAvatarTable.ToString());
@@ -79,8 +79,8 @@ public:
 		else {
 			Path = FName(*Get()->DefaultAvatarTable.ToString());
 		}
-		Get()->_AvatarTable = LoadObjFromPath<UDataTable>(Path);
-		return Get()->_AvatarTable;
+		auto Table = LoadObjFromPath<UDataTable>(Path);
+		return  Table;
 	}
 	UPROPERTY(config, EditAnywhere, Category = "Dynamical|Avatar")
 	bool UseNewIK=false;
