@@ -82,7 +82,7 @@ public:
 		auto Table = LoadObjFromPath<UDataTable>(Path);
 		return  Table;
 	}
-	UPROPERTY(config, EditAnywhere, Category = "Dynamical|Avatar")
+	UPROPERTY(config, EditAnywhere, Category = "Dynamical|Avatar",BlueprintReadWrite)
 	bool UseNewIK=false;
 #if WITH_EDITOR
 	void PostEditChangeProperty(struct FPropertyChangedEvent& e)
