@@ -91,7 +91,14 @@ void ANetClient::BeginDestroy()
         Client = NULL;
     }
 }
-
+void ANetClient::EndPlay(EEndPlayReason::Type EndPlayReason){
+	Super::EndPlay(EndPlayReason);
+	if (Client != NULL) {
+		UE_LOG(RustyNet, Warning, TEXT("NetClient BeginDestroy %i"), Uuid);
+		rd_netclient_drop(Client);
+		Client = NULL;
+	}
+}
 void ANetClient::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
